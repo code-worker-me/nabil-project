@@ -455,3 +455,507 @@ loadPlayersToRoster();
 // Optional: Add export button to download JSON
 // You can add this button in your HTML and call downloadPlayersJSON()
 window.downloadPlayersJSON = downloadPlayersJSON;
+
+// Modal HTML for Player Statistics
+const statsModalHTML = `
+<div id="statsModal" class="fixed inset-0 bg-white bg-opacity-50 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 rounded-t-2xl">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2 rounded-lg">
+            <i class="fa-solid fa-chart-line text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold">Tambah Statistik Pemain</h3>
+            <p class="text-red-100 text-sm">Input data statistik pemain</p>
+          </div>
+        </div>
+        <button id="closeStatsModal" class="text-white hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <form id="addStatsForm" class="p-6">
+      <!-- Player Info Section -->
+      <div class="bg-red-50 rounded-xl p-4 mb-6 border-2 border-red-100">
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-user text-red-600"></i>
+          Informasi Pemain
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Pemain</label>
+            <input 
+              type="text" 
+              name="playerName"
+              required
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="Contoh: Andi Wijaya"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Posisi</label>
+            <select 
+              name="position"
+              required
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+            >
+              <option value="">Pilih Posisi</option>
+              <option value="PG">Point Guard (PG)</option>
+              <option value="SG">Shooting Guard (SG)</option>
+              <option value="SF">Small Forward (SF)</option>
+              <option value="PF">Power Forward (PF)</option>
+              <option value="C">Center (C)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Per Game Stats -->
+      <div class="mb-6">
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-basketball text-red-600"></i>
+          Per Game Averages
+        </h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">GP (Games Played)</label>
+            <input 
+              type="number" 
+              name="gp"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="12"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">PPG (Points)</label>
+            <input 
+              type="number" 
+              name="ppg"
+              required
+              min="0"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="20.5"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">APG (Assists)</label>
+            <input 
+              type="number" 
+              name="apg"
+              required
+              min="0"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="5.3"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">BPG (Blocks)</label>
+            <input 
+              type="number" 
+              name="bpg"
+              required
+              min="0"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="1.2"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">SPG (Steals)</label>
+            <input 
+              type="number" 
+              name="spg"
+              required
+              min="0"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="2.1"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Free Throw Stats -->
+      <div class="mb-6">
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-bullseye text-red-600"></i>
+          Free Throw Stats
+        </h4>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">FT (Made)</label>
+            <input 
+              type="number" 
+              name="ft"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="45"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">FTA (Attempts)</label>
+            <input 
+              type="number" 
+              name="fta"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="60"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">FT% (Percentage)</label>
+            <input 
+              type="number" 
+              name="ftPercent"
+              required
+              min="0"
+              max="100"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="75.0"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Field Goal Stats -->
+      <div class="mb-6">
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-crosshairs text-red-600"></i>
+          Field Goal Stats
+        </h4>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">FG (Made)</label>
+            <input 
+              type="number" 
+              name="fg"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="150"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">FGA (Attempts)</label>
+            <input 
+              type="number" 
+              name="fga"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="300"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">FG% (Percentage)</label>
+            <input 
+              type="number" 
+              name="fgPercent"
+              required
+              min="0"
+              max="100"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="50.0"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-Point Stats -->
+      <div class="mb-6">
+        <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-circle-dot text-red-600"></i>
+          3-Point Stats
+        </h4>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">3P (Made)</label>
+            <input 
+              type="number" 
+              name="threeP"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="30"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">3PA (Attempts)</label>
+            <input 
+              type="number" 
+              name="threePA"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="90"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">3P% (Percentage)</label>
+            <input 
+              type="number" 
+              name="threePPercent"
+              required
+              min="0"
+              max="100"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="33.3"
+            >
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">TGP (Total Games)</label>
+            <input 
+              type="number" 
+              name="tgp"
+              required
+              min="0"
+              step="1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="36"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex gap-3 pt-6 border-t border-gray-200">
+        <button 
+          type="button" 
+          id="cancelStatsBtn"
+          class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-colors"
+        >
+          Batal
+        </button>
+        <button 
+          type="submit"
+          class="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+        >
+          <i class="fa-solid fa-check mr-2"></i>Simpan Statistik
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+// Storage key for player statistics
+const STATS_STORAGE_KEY = 'playerStatistics';
+
+// Load statistics from localStorage
+function loadStatistics() {
+  const stored = localStorage.getItem(STATS_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Save statistics to localStorage
+function saveStatistics(stats) {
+  localStorage.setItem(STATS_STORAGE_KEY, JSON.stringify(stats));
+}
+
+// Download statistics as JSON file
+function downloadStatisticsJSON() {
+  const stats = loadStatistics();
+  const dataStr = JSON.stringify(stats, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `player-statistics-${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// Initialize statistics modal
+document.addEventListener('DOMContentLoaded', function() {
+  // Add stats modal HTML to body
+  document.body.insertAdjacentHTML('beforeend', statsModalHTML);
+
+  // Get elements
+  const statsModal = document.getElementById('statsModal');
+  const openStatsModalBtn = document.querySelector('#player-stat button');
+  const closeStatsModalBtn = document.getElementById('closeStatsModal');
+  const cancelStatsBtn = document.getElementById('cancelStatsBtn');
+  const addStatsForm = document.getElementById('addStatsForm');
+
+  // Load existing statistics
+  loadStatisticsToTable();
+
+  // Open modal
+  openStatsModalBtn?.addEventListener('click', function() {
+    statsModal.classList.remove('hidden');
+    statsModal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  });
+
+  // Close modal function
+  function closeStatsModal() {
+    statsModal.classList.add('hidden');
+    statsModal.classList.remove('flex');
+    document.body.style.overflow = 'auto';
+    addStatsForm.reset();
+  }
+
+  // Close modal events
+  closeStatsModalBtn?.addEventListener('click', closeStatsModal);
+  cancelStatsBtn?.addEventListener('click', closeStatsModal);
+
+  // Close when clicking outside
+  statsModal?.addEventListener('click', function(e) {
+    if (e.target === statsModal) {
+      closeStatsModal();
+    }
+  });
+
+  // Close with ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !statsModal.classList.contains('hidden')) {
+      closeStatsModal();
+    }
+  });
+
+  // Handle form submission
+  addStatsForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(addStatsForm);
+    const statsData = {
+      id: Date.now(),
+      playerName: formData.get('playerName'),
+      position: formData.get('position'),
+      gp: parseInt(formData.get('gp')),
+      ppg: parseFloat(formData.get('ppg')),
+      apg: parseFloat(formData.get('apg')),
+      bpg: parseFloat(formData.get('bpg')),
+      spg: parseFloat(formData.get('spg')),
+      ft: parseInt(formData.get('ft')),
+      fta: parseInt(formData.get('fta')),
+      ftPercent: parseFloat(formData.get('ftPercent')),
+      fg: parseInt(formData.get('fg')),
+      fga: parseInt(formData.get('fga')),
+      fgPercent: parseFloat(formData.get('fgPercent')),
+      threeP: parseInt(formData.get('threeP')),
+      threePA: parseInt(formData.get('threePA')),
+      threePPercent: parseFloat(formData.get('threePPercent')),
+      tgp: parseInt(formData.get('tgp'))
+    };
+
+    // Load existing stats
+    const allStats = loadStatistics();
+    
+    // Add new stats
+    allStats.push(statsData);
+    
+    // Save to localStorage
+    saveStatistics(allStats);
+
+    console.log('New Statistics:', statsData);
+
+    // Reload table
+    loadStatisticsToTable();
+
+    // Show success
+    alert(`Statistik ${statsData.playerName} berhasil ditambahkan!`);
+
+    // Close modal
+    closeStatsModal();
+  });
+});
+
+// Load all statistics to table
+function loadStatisticsToTable() {
+  const stats = loadStatistics();
+  const tbody = document.getElementById('stats-body');
+  
+  tbody.innerHTML = '';
+  
+  stats.forEach((stat, index) => {
+    addStatToTable(stat, index + 1);
+  });
+}
+
+// Add single stat row to table
+function addStatToTable(stat, rowNumber) {
+  const tbody = document.getElementById('stats-body');
+  
+  const row = `
+    <tr class="border-b border-gray-200 hover:bg-red-50 transition-colors">
+      <td class="px-4 py-4 font-medium text-gray-900">${rowNumber}</td>
+      <td class="px-4 py-4 font-semibold text-gray-800">${stat.playerName}</td>
+      <td class="px-4 py-4 text-center">
+        <span class="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-bold">
+          ${stat.position}
+        </span>
+      </td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.gp}</td>
+      <td class="px-4 py-4 text-center font-semibold text-red-600">${stat.ppg}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.apg}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.bpg}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.spg}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.ft}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.fta}</td>
+      <td class="px-4 py-4 text-center font-medium text-gray-800">${stat.ftPercent}%</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.fg}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.fga}</td>
+      <td class="px-4 py-4 text-center font-medium text-gray-800">${stat.fgPercent}%</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.threeP}</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.threePA}</td>
+      <td class="px-4 py-4 text-center font-medium text-gray-800">${stat.threePPercent}%</td>
+      <td class="px-4 py-4 text-center text-gray-700">${stat.tgp}</td>
+      <td class="px-4 py-4">
+        <div class="flex gap-2 justify-center">
+          <button onclick="editStatistic(${stat.id})" class="text-blue-600 hover:text-blue-700 hover:bg-blue-50 px-3 py-1 rounded transition-colors">
+            <i class="fa-solid fa-edit"></i>
+          </button>
+          <button onclick="deleteStatistic(${stat.id})" class="text-red-600 hover:text-red-700 hover:bg-red-50 px-3 py-1 rounded transition-colors">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `;
+  
+  tbody.insertAdjacentHTML('beforeend', row);
+}
+
+// Delete statistic
+function deleteStatistic(id) {
+  if (confirm('Apakah Anda yakin ingin menghapus statistik ini?')) {
+    let stats = loadStatistics();
+    stats = stats.filter(stat => stat.id !== id);
+    saveStatistics(stats);
+    loadStatisticsToTable();
+    alert('Statistik berhasil dihapus!');
+  }
+}
+
+// Edit statistic (optional - you can implement this)
+function editStatistic(id) {
+  alert('Fitur edit akan segera tersedia!');
+  // You can implement edit functionality here
+}
+
+// Make functions global
+window.deleteStatistic = deleteStatistic;
+window.editStatistic = editStatistic;
+window.downloadStatisticsJSON = downloadStatisticsJSON;
