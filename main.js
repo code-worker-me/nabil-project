@@ -959,3 +959,524 @@ function editStatistic(id) {
 window.deleteStatistic = deleteStatistic;
 window.editStatistic = editStatistic;
 window.downloadStatisticsJSON = downloadStatisticsJSON;
+
+// Modal HTML for Match History
+const matchModalHTML = `
+<div id="matchModal" class="fixed inset-0 bg-white bg-opacity-50 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 rounded-t-2xl">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2 rounded-lg">
+            <i class="fa-solid fa-clock-rotate-left text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold">Tambah Pertandingan</h3>
+            <p class="text-red-100 text-sm">Input data pertandingan baru</p>
+          </div>
+        </div>
+        <button id="closeMatchModal" class="text-white hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <form id="addMatchForm" class="p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Opponent Team -->
+        <div class="md:col-span-2">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fa-solid fa-shield text-red-600 mr-2"></i>Tim Lawan
+          </label>
+          <input 
+            type="text" 
+            name="opponent"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+            placeholder="Contoh: Thunder"
+          >
+        </div>
+
+        <!-- Match Type -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fa-solid fa-trophy text-red-600 mr-2"></i>Tipe Pertandingan
+          </label>
+          <select 
+            name="matchType"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+          >
+            <option value="">Pilih Tipe</option>
+            <option value="Competitive">Competitive</option>
+            <option value="Tournament">Tournament</option>
+            <option value="Friendly">Friendly</option>
+          </select>
+        </div>
+
+        <!-- Match Date -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fa-solid fa-calendar text-red-600 mr-2"></i>Tanggal Pertandingan
+          </label>
+          <input 
+            type="date" 
+            name="matchDate"
+            required
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+          >
+        </div>
+
+        <!-- Our Score -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fa-solid fa-basketball text-red-600 mr-2"></i>Skor Tim Kita
+          </label>
+          <input 
+            type="number" 
+            name="ourScore"
+            required
+            min="0"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+            placeholder="85"
+          >
+        </div>
+
+        <!-- Opponent Score -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fa-solid fa-basketball text-red-600 mr-2"></i>Skor Tim Lawan
+          </label>
+          <input 
+            type="number" 
+            name="opponentScore"
+            required
+            min="0"
+            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+            placeholder="72"
+          >
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex gap-3 mt-8 pt-6 border-t border-gray-200">
+        <button 
+          type="button" 
+          id="cancelMatchBtn"
+          class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-colors"
+        >
+          Batal
+        </button>
+        <button 
+          type="submit"
+          class="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+        >
+          <i class="fa-solid fa-check mr-2"></i>Simpan Pertandingan
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+// Modal HTML for Match Statistics (Top Performers)
+const matchStatsModalHTML = `
+<div id="matchStatsModal" class="fixed inset-0 bg-white bg-opacity-50 hidden items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 rounded-t-2xl">
+      <div class="flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <div class="bg-white/20 p-2 rounded-lg">
+            <i class="fa-solid fa-chart-line text-2xl"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold">Tambah Statistik Pertandingan</h3>
+            <p class="text-red-100 text-sm">Input performa pemain terbaik</p>
+          </div>
+        </div>
+        <button id="closeMatchStatsModal" class="text-white hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all">
+          <i class="fa-solid fa-xmark text-2xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Body -->
+    <form id="addMatchStatsForm" class="p-6">
+      <div class="space-y-6">
+        
+        <!-- Top Scorer -->
+        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 border-2 border-yellow-200">
+          <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+            🏆 Top Scorer
+          </h4>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Pemain</label>
+              <input 
+                type="text" 
+                name="topScorerName"
+                required
+                class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-orange-500 focus:outline-none transition-colors"
+                placeholder="Andi Wijaya"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Points</label>
+              <input 
+                type="number" 
+                name="topScorerPoints"
+                required
+                min="0"
+                class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-orange-500 focus:outline-none transition-colors"
+                placeholder="28"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Most Assists -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 border-2 border-blue-200">
+          <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+            🎯 Most Assists
+          </h4>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Pemain</label>
+              <input 
+                type="text" 
+                name="assistLeaderName"
+                required
+                class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors"
+                placeholder="Budi Santoso"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Assists</label>
+              <input 
+                type="number" 
+                name="assistLeaderAssists"
+                required
+                min="0"
+                class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-indigo-500 focus:outline-none transition-colors"
+                placeholder="12"
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Best Defense -->
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border-2 border-purple-200">
+          <h4 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+            🛡️ Best Defense
+          </h4>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Nama Pemain</label>
+              <input 
+                type="text" 
+                name="defenseLeaderName"
+                required
+                class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                placeholder="Cahyo Pratama"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700 mb-2">Blocks</label>
+              <input 
+                type="number" 
+                name="defenseLeaderBlocks"
+                required
+                min="0"
+                class="w-full px-4 py-2 border-2 border-gray-300 rounded-xl focus:border-purple-500 focus:outline-none transition-colors"
+                placeholder="8"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex gap-3 mt-8 pt-6 border-t border-gray-200">
+        <button 
+          type="button" 
+          id="cancelMatchStatsBtn"
+          class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-colors"
+        >
+          Batal
+        </button>
+        <button 
+          type="submit"
+          class="flex-1 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all"
+        >
+          <i class="fa-solid fa-check mr-2"></i>Simpan Statistik
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;
+
+// Storage keys
+const MATCH_STORAGE_KEY = 'matchHistory';
+const MATCH_STATS_STORAGE_KEY = 'matchStatistics';
+
+// Load matches from localStorage
+function loadMatches() {
+  const stored = localStorage.getItem(MATCH_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Save matches to localStorage
+function saveMatches(matches) {
+  localStorage.setItem(MATCH_STORAGE_KEY, JSON.stringify(matches));
+}
+
+// Load match stats from localStorage
+function loadMatchStats() {
+  const stored = localStorage.getItem(MATCH_STATS_STORAGE_KEY);
+  return stored ? JSON.parse(stored) : [];
+}
+
+// Save match stats to localStorage
+function saveMatchStats(stats) {
+  localStorage.setItem(MATCH_STATS_STORAGE_KEY, JSON.stringify(stats));
+}
+
+// Download match data as JSON
+function downloadMatchJSON() {
+  const matches = loadMatches();
+  const dataStr = JSON.stringify(matches, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `match-history-${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// Download match stats as JSON
+function downloadMatchStatsJSON() {
+  const stats = loadMatchStats();
+  const dataStr = JSON.stringify(stats, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `match-statistics-${new Date().toISOString().split('T')[0]}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+// Initialize match modals
+document.addEventListener('DOMContentLoaded', function() {
+  // Add modals HTML to body
+  document.body.insertAdjacentHTML('beforeend', matchModalHTML);
+  document.body.insertAdjacentHTML('beforeend', matchStatsModalHTML);
+
+  // Get elements - Match History Modal
+  const matchModal = document.getElementById('matchModal');
+  const openMatchModalBtns = document.querySelectorAll('.bg-white.rounded-2xl .bg-gradient-to-r.from-red-500');
+  const closeMatchModalBtn = document.getElementById('closeMatchModal');
+  const cancelMatchBtn = document.getElementById('cancelMatchBtn');
+  const addMatchForm = document.getElementById('addMatchForm');
+
+  // Get elements - Match Stats Modal
+  const matchStatsModal = document.getElementById('matchStatsModal');
+  const closeMatchStatsModalBtn = document.getElementById('closeMatchStatsModal');
+  const cancelMatchStatsBtn = document.getElementById('cancelMatchStatsBtn');
+  const addMatchStatsForm = document.getElementById('addMatchStatsForm');
+
+  // Load existing data
+  loadMatchesToUI();
+  loadMatchStatsToUI();
+
+  // Open Match History modal (first button in the section)
+  if (openMatchModalBtns[0]) {
+    openMatchModalBtns[0].addEventListener('click', function() {
+      matchModal.classList.remove('hidden');
+      matchModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  // Open Match Stats modal (second button in the section)
+  if (openMatchModalBtns[1]) {
+    openMatchModalBtns[1].addEventListener('click', function() {
+      matchStatsModal.classList.remove('hidden');
+      matchStatsModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+
+  // Close Match History modal
+  function closeMatchModal() {
+    matchModal.classList.add('hidden');
+    matchModal.classList.remove('flex');
+    document.body.style.overflow = 'auto';
+    addMatchForm.reset();
+  }
+
+  closeMatchModalBtn?.addEventListener('click', closeMatchModal);
+  cancelMatchBtn?.addEventListener('click', closeMatchModal);
+
+  matchModal?.addEventListener('click', function(e) {
+    if (e.target === matchModal) closeMatchModal();
+  });
+
+  // Close Match Stats modal
+  function closeMatchStatsModal() {
+    matchStatsModal.classList.add('hidden');
+    matchStatsModal.classList.remove('flex');
+    document.body.style.overflow = 'auto';
+    addMatchStatsForm.reset();
+  }
+
+  closeMatchStatsModalBtn?.addEventListener('click', closeMatchStatsModal);
+  cancelMatchStatsBtn?.addEventListener('click', closeMatchStatsModal);
+
+  matchStatsModal?.addEventListener('click', function(e) {
+    if (e.target === matchStatsModal) closeMatchStatsModal();
+  });
+
+  // Close with ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      if (!matchModal.classList.contains('hidden')) closeMatchModal();
+      if (!matchStatsModal.classList.contains('hidden')) closeMatchStatsModal();
+    }
+  });
+
+  // Handle Match form submission
+  addMatchForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(addMatchForm);
+    const ourScore = parseInt(formData.get('ourScore'));
+    const opponentScore = parseInt(formData.get('opponentScore'));
+    const result = ourScore > opponentScore ? 'WIN' : 'LOSS';
+
+    const matchData = {
+      id: Date.now(),
+      opponent: formData.get('opponent'),
+      matchType: formData.get('matchType'),
+      matchDate: formData.get('matchDate'),
+      ourScore: ourScore,
+      opponentScore: opponentScore,
+      result: result
+    };
+
+    const matches = loadMatches();
+    matches.unshift(matchData); // Add to beginning
+    saveMatches(matches);
+
+    console.log('New Match:', matchData);
+    loadMatchesToUI();
+    alert(`Pertandingan vs ${matchData.opponent} berhasil ditambahkan!`);
+    closeMatchModal();
+  });
+
+  // Handle Match Stats form submission
+  addMatchStatsForm?.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const formData = new FormData(addMatchStatsForm);
+    const statsData = {
+      id: Date.now(),
+      topScorer: {
+        name: formData.get('topScorerName'),
+        points: parseInt(formData.get('topScorerPoints'))
+      },
+      assistLeader: {
+        name: formData.get('assistLeaderName'),
+        assists: parseInt(formData.get('assistLeaderAssists'))
+      },
+      defenseLeader: {
+        name: formData.get('defenseLeaderName'),
+        blocks: parseInt(formData.get('defenseLeaderBlocks'))
+      }
+    };
+
+    const stats = loadMatchStats();
+    stats.unshift(statsData); // Add to beginning
+    saveMatchStats(stats);
+
+    console.log('New Match Stats:', statsData);
+    loadMatchStatsToUI();
+    alert('Statistik pertandingan berhasil ditambahkan!');
+    closeMatchStatsModal();
+  });
+});
+
+// Load matches to UI
+function loadMatchesToUI() {
+  const matches = loadMatches();
+  const container = document.querySelector('.mt-6.space-y-3');
+  
+  if (!container) return;
+  
+  container.innerHTML = '';
+  
+  // Show only latest 3 matches
+  matches.slice(0, 3).forEach(match => {
+    addMatchToUI(match, container);
+  });
+}
+
+// Add single match to UI
+function addMatchToUI(match, container) {
+  const isWin = match.result === 'WIN';
+  const date = new Date(match.matchDate).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+  
+  const matchCard = `
+    <div class="bg-gradient-to-r from-${isWin ? 'green' : 'red'}-50 to-${isWin ? 'green' : 'red'}-100 border-l-4 border-${isWin ? 'green' : 'red'}-500 rounded-lg p-4 hover:shadow-md transition-shadow">
+      <div class="flex justify-between items-center">
+        <div>
+          <p class="font-semibold text-gray-800">Spiritz vs ${match.opponent}</p>
+          <p class="text-sm text-gray-600">${match.matchType} • ${date}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-2xl font-bold text-${isWin ? 'green' : 'red'}-600">${match.ourScore}-${match.opponentScore}</p>
+          <span class="text-xs bg-${isWin ? 'green' : 'red'}-500 text-white px-2 py-1 rounded-full font-semibold">${match.result}</span>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  container.insertAdjacentHTML('beforeend', matchCard);
+}
+
+// Load match stats to UI
+function loadMatchStatsToUI() {
+  const stats = loadMatchStats();
+  
+  if (stats.length === 0) return;
+  
+  const latestStats = stats[0]; // Get latest stats
+  
+  // Update Top Scorer
+  const topScorerName = document.querySelector('.from-yellow-50 .text-orange-600');
+  const topScorerPoints = document.querySelector('.from-yellow-50 .text-3xl');
+  if (topScorerName) topScorerName.textContent = latestStats.topScorer.name;
+  if (topScorerPoints) topScorerPoints.textContent = latestStats.topScorer.points;
+  
+  // Update Assist Leader
+  const assistLeaderName = document.querySelector('.from-blue-50 .text-indigo-600');
+  const assistLeaderAssists = document.querySelector('.from-blue-50 .text-3xl');
+  if (assistLeaderName) assistLeaderName.textContent = latestStats.assistLeader.name;
+  if (assistLeaderAssists) assistLeaderAssists.textContent = latestStats.assistLeader.assists;
+  
+  // Update Defense Leader
+  const defenseLeaderName = document.querySelector('.from-purple-50 .text-purple-600');
+  const defenseLeaderBlocks = document.querySelector('.from-purple-50 .text-3xl');
+  if (defenseLeaderName) defenseLeaderName.textContent = latestStats.defenseLeader.name;
+  if (defenseLeaderBlocks) defenseLeaderBlocks.textContent = latestStats.defenseLeader.blocks;
+}
+
+// Make functions global
+window.downloadMatchJSON = downloadMatchJSON;
+window.downloadMatchStatsJSON = downloadMatchStatsJSON;
