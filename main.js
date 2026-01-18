@@ -74,11 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
   renderStats();
 });
 
+// ======================== Modal for Adding New Player ======================== //
 
-// Modal
+// Modal HTML - Tambahkan ke body atau sebelum closing </body> tag
 const modalHTML = `
 <div id="playerModal" class="fixed inset-0 bg-white bg-opacity-50 hidden items-center justify-center z-50 p-4">
-  <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
+  <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto transform transition-all">
     <!-- Modal Header -->
     <div class="bg-gradient-to-r from-red-600 to-red-700 text-white p-6 rounded-t-2xl">
       <div class="flex justify-between items-center">
@@ -88,7 +89,7 @@ const modalHTML = `
           </div>
           <div>
             <h3 class="text-2xl font-bold">Tambah Pemain Baru</h3>
-            <p class="text-red-100 text-sm">Lengkapi data pemain</p>
+            <p class="text-red-100 text-sm">Lengkapi data pemain secara detail</p>
           </div>
         </div>
         <button id="closeModal" class="text-white hover:bg-white/20 w-10 h-10 rounded-full flex items-center justify-center transition-all">
@@ -99,134 +100,237 @@ const modalHTML = `
 
     <!-- Modal Body -->
     <form id="addPlayerForm" class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        <!-- Nama Lengkap -->
-        <div class="md:col-span-2">
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-user text-red-600 mr-2"></i>Nama Lengkap
-          </label>
-          <input 
-            type="text" 
-            id="playerName" 
-            name="name"
-            required
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-            placeholder="Contoh: Andi Wijaya"
-          >
-        </div>
+      
+      <!-- Personal Information Section -->
+      <div class="bg-red-50 rounded-xl p-5 mb-6 border-2 border-red-100">
+        <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-id-card text-red-600"></i>
+          Informasi Personal
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Nama Lengkap -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-user text-red-600 mr-2"></i>Nama Lengkap
+            </label>
+            <input 
+              type="text" 
+              name="name"
+              required
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="Contoh: Andi Wijaya"
+            >
+          </div>
 
-        <!-- Posisi -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-basketball text-red-600 mr-2"></i>Posisi
-          </label>
-          <select 
-            id="playerPosition" 
-            name="position"
-            required
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-          >
-            <option value="">Pilih Posisi</option>
-            <option value="Point Guard">Point Guard (PG)</option>
-            <option value="Shooting Guard">Shooting Guard (SG)</option>
-            <option value="Small Forward">Small Forward (SF)</option>
-            <option value="Power Forward">Power Forward (PF)</option>
-            <option value="Center">Center (C)</option>
-          </select>
-        </div>
+          <!-- URL Foto -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-image text-red-600 mr-2"></i>URL Foto Pemain
+            </label>
+            <input 
+              type="url" 
+              name="image"
+              required
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="https://example.com/photo.jpg"
+            >
+          </div>
 
-        <!-- Nomor Punggung -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-hashtag text-red-600 mr-2"></i>Nomor Punggung
-          </label>
-          <input 
-            type="number" 
-            id="playerNumber" 
-            name="number"
-            required
-            min="0"
-            max="99"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-            placeholder="Contoh: 7"
-          >
-        </div>
+          <!-- Jenis Kelamin -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-venus-mars text-red-600 mr-2"></i>Jenis Kelamin
+            </label>
+            <select 
+              name="gender"
+              required
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+            >
+              <option value="">Pilih Jenis Kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
 
-        <!-- Usia -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-calendar text-red-600 mr-2"></i>Usia
-          </label>
-          <input 
-            type="number" 
-            id="playerAge" 
-            name="age"
-            required
-            min="15"
-            max="50"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-            placeholder="Contoh: 25"
-          >
-        </div>
+          <!-- Nomor Punggung -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-hashtag text-red-600 mr-2"></i>Nomor Punggung
+            </label>
+            <input 
+              type="number" 
+              name="number"
+              required
+              min="0"
+              max="99"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="7"
+            >
+          </div>
 
-        <!-- Tinggi Badan -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-ruler-vertical text-red-600 mr-2"></i>Tinggi Badan (cm)
-          </label>
-          <input 
-            type="number" 
-            id="playerHeight" 
-            name="height"
-            required
-            min="150"
-            max="250"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-            placeholder="Contoh: 188"
-          >
-        </div>
+          <!-- Posisi -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-basketball text-red-600 mr-2"></i>Posisi
+            </label>
+            <select 
+              name="position"
+              required
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+            >
+              <option value="">Pilih Posisi</option>
+              <option value="Point Guard">Point Guard (PG)</option>
+              <option value="Shooting Guard">Shooting Guard (SG)</option>
+              <option value="Small Forward">Small Forward (SF)</option>
+              <option value="Power Forward">Power Forward (PF)</option>
+              <option value="Center">Center (C)</option>
+            </select>
+          </div>
 
-        <!-- Jumlah Pertandingan -->
-        <div>
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-trophy text-red-600 mr-2"></i>Jumlah Pertandingan
-          </label>
-          <input 
-            type="number" 
-            id="playerGames" 
-            name="games"
-            required
-            min="0"
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-            placeholder="Contoh: 12"
-          >
-        </div>
+          <!-- Usia -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-calendar text-red-600 mr-2"></i>Usia
+            </label>
+            <input 
+              type="number" 
+              name="age"
+              required
+              min="15"
+              max="50"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="25"
+            >
+          </div>
 
-        <!-- URL Foto -->
-        <div class="md:col-span-2">
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            <i class="fa-solid fa-image text-red-600 mr-2"></i>URL Foto Pemain
-          </label>
-          <input 
-            type="url" 
-            id="playerImage" 
-            name="image"
-            required
-            class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
-            placeholder="https://example.com/photo.jpg"
-          >
+          <!-- Jumlah Pertandingan -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-trophy text-red-600 mr-2"></i>Jumlah Pertandingan
+            </label>
+            <input 
+              type="number" 
+              name="games"
+              required
+              min="0"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-red-500 focus:outline-none transition-colors"
+              placeholder="12"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Physical Attributes Section -->
+      <div class="bg-blue-50 rounded-xl p-5 mb-6 border-2 border-blue-100">
+        <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-dumbbell text-blue-600"></i>
+          Atribut Fisik
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Tinggi Badan -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-ruler-vertical text-blue-600 mr-2"></i>Tinggi Badan (cm)
+            </label>
+            <input 
+              type="number" 
+              name="height"
+              required
+              min="150"
+              max="250"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="188"
+            >
+          </div>
+
+          <!-- Berat Badan -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-weight-scale text-blue-600 mr-2"></i>Berat Badan (kg)
+            </label>
+            <input 
+              type="number" 
+              name="weight"
+              required
+              min="40"
+              max="200"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="85"
+            >
+          </div>
+
+          <!-- Wing Span -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-arrows-left-right text-blue-600 mr-2"></i>Wing Span (cm)
+            </label>
+            <input 
+              type="number" 
+              name="wingspan"
+              required
+              min="150"
+              max="250"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
+              placeholder="195"
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- Athletic Performance Section -->
+      <div class="bg-green-50 rounded-xl p-5 mb-6 border-2 border-green-100">
+        <h4 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-bolt text-green-600"></i>
+          Performa Atletik
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Kecepatan Lari -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-gauge-high text-green-600 mr-2"></i>Kecepatan Lari (km/jam)
+            </label>
+            <input 
+              type="number" 
+              name="speed"
+              required
+              min="0"
+              max="50"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-green-500 focus:outline-none transition-colors"
+              placeholder="28.5"
+            >
+          </div>
+
+          <!-- Tinggi Loncatan Maksimal -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              <i class="fa-solid fa-arrow-up text-green-600 mr-2"></i>Tinggi Loncatan Maksimal (cm)
+            </label>
+            <input 
+              type="number" 
+              name="verticalJump"
+              required
+              min="0"
+              max="150"
+              step="0.1"
+              class="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:border-green-500 focus:outline-none transition-colors"
+              placeholder="85"
+            >
+          </div>
         </div>
       </div>
 
       <!-- Modal Footer -->
-      <div class="flex gap-3 mt-8 pt-6 border-t border-gray-200">
+      <div class="flex gap-3 pt-6 border-t border-gray-200">
         <button 
           type="button" 
           id="cancelBtn"
           class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-xl transition-colors"
         >
-          Batal
+          <i class="fa-solid fa-xmark mr-2"></i>Batal
         </button>
         <button 
           type="submit"
@@ -274,7 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Get elements
   const modal = document.getElementById('playerModal');
-  const openModalBtn = document.querySelector('#team-roster button'); // Button "Tambah pemain"
+  const openModalBtn = document.querySelector('#team-roster button');
   const closeModalBtn = document.getElementById('closeModal');
   const cancelBtn = document.getElementById('cancelBtn');
   const addPlayerForm = document.getElementById('addPlayerForm');
@@ -324,12 +428,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const playerData = {
       id: Date.now(),
       name: formData.get('name'),
-      position: formData.get('position'),
+      image: formData.get('image'),
+      gender: formData.get('gender'),
       number: parseInt(formData.get('number')),
+      position: formData.get('position'),
       age: parseInt(formData.get('age')),
-      height: parseInt(formData.get('height')),
       games: parseInt(formData.get('games')),
-      image: formData.get('image')
+      height: parseFloat(formData.get('height')),
+      weight: parseFloat(formData.get('weight')),
+      wingspan: parseFloat(formData.get('wingspan')),
+      speed: parseFloat(formData.get('speed')),
+      verticalJump: parseFloat(formData.get('verticalJump'))
     };
 
     // Load existing players
@@ -365,7 +474,7 @@ function loadPlayersToRoster() {
   
   // Add each player
   players.forEach(player => {
-    addPlayerToRoster(player, false); // false = don't save again
+    addPlayerToRoster(player, false);
   });
 }
 
@@ -393,34 +502,51 @@ function addPlayerToRoster(player, saveToStorage = false) {
         ${player.name}
       </h3>
       
-      <p class="text-red-600 font-semibold mb-4 text-center">
+      <p class="text-red-600 font-semibold mb-2 text-center">
         ${player.position}
       </p>
 
+      <p class="text-xs text-gray-500 mb-4">${player.gender}</p>
+
       <div class="w-full h-px bg-gradient-to-r from-transparent via-red-300 to-transparent mb-4"></div>
 
-      <div class="w-full space-y-3">
+      <div class="w-full space-y-2 text-sm">
         <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-500">Usia</span>
-          <span class="text-base font-semibold text-gray-800">${player.age} tahun</span>
+          <span class="text-gray-500">Usia</span>
+          <span class="font-semibold text-gray-800">${player.age} tahun</span>
         </div>
         <div class="flex justify-between items-center">
-          <span class="text-sm text-gray-500">Tinggi</span>
-          <span class="text-base font-semibold text-gray-800">${player.height} cm</span>
+          <span class="text-gray-500">Tinggi</span>
+          <span class="font-semibold text-gray-800">${player.height} cm</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-500">Berat</span>
+          <span class="font-semibold text-gray-800">${player.weight} kg</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-500">Wing Span</span>
+          <span class="font-semibold text-gray-800">${player.wingspan} cm</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-500">Kecepatan</span>
+          <span class="font-semibold text-blue-600">${player.speed} km/h</span>
+        </div>
+        <div class="flex justify-between items-center">
+          <span class="text-gray-500">Loncatan</span>
+          <span class="font-semibold text-green-600">${player.verticalJump} cm</span>
         </div>
       </div>
 
       <div class="w-full h-px bg-gray-200 my-4"></div>
 
-      <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-lg px-4 py-3 w-full">
+      <div class="bg-gradient-to-r from-red-50 to-red-100 rounded-lg px-4 py-3 w-full mb-3">
         <p class="text-center text-gray-700">
           <span class="text-2xl font-bold text-red-600">${player.games}</span>
           <span class="text-sm text-gray-600 ml-2">Pertandingan</span>
         </p>
       </div>
       
-      <button class="delete-btn mt-4 w-full text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors border-2 border-red-200 hover:border-red-400"
-      data-id="${player.id}">
+      <button onclick="deletePlayer(${player.id})" class="w-full text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors border-2 border-red-200 hover:border-red-400">
         <i class="fa-solid fa-trash mr-2"></i>Hapus
       </button>
     </div>
@@ -431,30 +557,19 @@ function addPlayerToRoster(player, saveToStorage = false) {
 
 // Function to delete player
 function deletePlayer(id) {
-  if (!confirm("Apakah Anda yakin ingin menghapus pemain ini?")) return;
-
-  let players = loadPlayers();
-  players = players.filter(player => player.id !== id);
-
-  savePlayers(players);
-  loadPlayersToRoster();
-
-  alert("Pemain berhasil dihapus!");
+  if (confirm('Apakah Anda yakin ingin menghapus pemain ini?')) {
+    let players = loadPlayers();
+    players = players.filter(player => player.id !== id);
+    savePlayers(players);
+    loadPlayersToRoster();
+    alert('Pemain berhasil dihapus!');
+  }
 }
 
-document.addEventListener("click", (e) => {
-  const btn = e.target.closest(".delete-btn");
-  if (!btn) return;
-
-  const id = Number(btn.dataset.id);
-  deletePlayer(id);
-});
-
-loadPlayersToRoster();
-
-// Optional: Add export button to download JSON
-// You can add this button in your HTML and call downloadPlayersJSON()
+// Make functions global
 window.downloadPlayersJSON = downloadPlayersJSON;
+
+// ======================== Modal for Adding Player Statistics ======================== //
 
 // Modal HTML for Player Statistics
 const statsModalHTML = `
