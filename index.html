@@ -28,53 +28,165 @@
       </div>
     </header>
 
-    <!-- Cards -->
+    <!-- Cards Leaderboard -->
     <div class="flex max-w-6xl mx-auto mt-6 gap-6 flex-wrap justify-center">
-      <div class="bg-red-500 text-white p-6 rounded-lg shadow-lg">
-        <div class="flex flex-col">
-          <div class="flex justify-between items-center mb-4">
-            <i class="fa-solid fa-trophy"></i>
-            <h2 class="text-3xl font-bold">9</h2>
+      <div class="w-full flex items-center justify-between flex-wrap">
+        <div
+          class="bg-red-500 text-white p-6 rounded-lg shadow-lg min-w-[250px]"
+        >
+          <div class="flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+              <i class="fa-solid fa-trophy"></i>
+              <h2 class="text-3xl font-bold">9</h2>
+            </div>
+            <h1 class="text-xl font-semibold mb-2">Menang</h1>
+            <p class="text-red-100">Dari 12 pertandingan</p>
           </div>
-          <h1 class="text-xl font-semibold mb-2">Menang</h1>
-          <p class="text-red-100">Dari 12 pertandingan</p>
         </div>
-      </div>
 
-      <div class="bg-red-500 text-white p-6 rounded-lg shadow-lg">
-        <div class="flex flex-col">
-          <div class="flex justify-between items-center mb-4">
-            <i class="fa-solid fa-chart-area text-2xl"></i>
-            <h2 class="text-3xl font-bold">75.0%</h2>
+        <div
+          class="bg-red-500 text-white p-6 rounded-lg shadow-lg min-w-[250px]"
+        >
+          <div class="flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+              <i class="fa-solid fa-chart-area text-2xl"></i>
+              <h2 class="text-3xl font-bold">75.0%</h2>
+            </div>
+            <h1 class="text-xl font-semibold mb-2">Win Rate</h1>
+            <p class="text-red-100">Persentase Kemenangan</p>
           </div>
-          <h1 class="text-xl font-semibold mb-2">Win Rate</h1>
-          <p class="text-red-100">Persentase Kemenangan</p>
         </div>
-      </div>
 
-      <div class="bg-red-500 text-white p-6 rounded-lg shadow-lg">
-        <div class="flex flex-col">
-          <div class="flex justify-between items-center mb-4">
-            <i class="fa-brands fa-dart-lang"></i>
-            <h2 class="text-3xl font-bold">6</h2>
+        <div
+          class="bg-red-500 text-white p-6 rounded-lg shadow-lg min-w-[250px]"
+        >
+          <div class="flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+              <i class="fa-brands fa-dart-lang"></i>
+              <h2 class="text-3xl font-bold">6</h2>
+            </div>
+            <h1 class="text-xl font-semibold mb-2">Kompetitif</h1>
+            <p class="text-red-100">Pertandingan resmi</p>
           </div>
-          <h1 class="text-xl font-semibold mb-2">Kompetitif</h1>
-          <p class="text-red-100">Pertandingan resmi</p>
         </div>
-      </div>
 
-      <div class="bg-red-500 text-white p-6 rounded-lg shadow-lg">
-        <div class="flex flex-col">
-          <div class="flex justify-between items-center mb-4">
-            <i class="bi bi-person-fill"></i>
-            <h2 class="text-3xl font-bold">3</h2>
+        <div
+          class="bg-red-500 text-white p-6 rounded-lg shadow-lg min-w-[250px]"
+        >
+          <div class="flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+              <i class="bi bi-person-fill"></i>
+              <h2 class="text-3xl font-bold">3</h2>
+            </div>
+            <h1 class="text-xl font-semibold mb-2">Turnamen</h1>
+            <p class="text-red-100">Kompetisi turnamen</p>
           </div>
-          <h1 class="text-xl font-semibold mb-2">Turnamen</h1>
-          <p class="text-red-100">Kompetisi turnamen</p>
         </div>
       </div>
     </div>
 
-    <script src="./main.js"></script>
+    <!-- Team Profile -->
+    <div class="max-w-6xl mx-auto mt-10">
+      <!-- Header Profile -->
+      <div class="w-full flex justify-between mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">Team Roster</h2>
+          <p>Spiritz Basketball</p>
+        </div>
+        <button>Tambah pemain</button>
+      </div>
+
+      <!-- Card Profile pemain -->
+      <div>
+        <div id="roster-container" class="mt-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <!-- Card Profile 1 -->
+
+          <!-- Additional player cards can be added here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Player Statistic -->
+    <div class="max-w-6xl mx-auto mt-10">
+      <div class="w-full flex justify-between mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">Player Statistics</h2>
+          <p>Season averages and totals</p>
+        </div>
+        <button>Tambah pemain</button>
+      </div>
+
+      <div class="bg-white rounded shadow-lg border-2 border-red-100 overflow-hidden">
+        <div class="overflow-x-auto">
+      <table class="w-full">
+        <thead>
+        <tr class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-600 hover:to-red-700">
+          <th class="text-white font-bold">No</th>
+          <th class="text-white font-bold">Player</th>
+          <th class="text-white font-bold">Position</th>
+          <th class="text-white font-bold text-center">GP</th>
+          <th class="text-white font-bold text-center">PPG</th>
+          <th class="text-white font-bold text-center">APG</th>
+          <th class="text-white font-bold text-center">BPG</th>
+          <th class="text-white font-bold text-center">SPG</th>
+          <th class="text-white font-bold text-center">FT</th>
+          <th class="text-white font-bold text-center">FTA</th>
+          <th class="text-white font-bold text-center">FT%</th>
+          <th class="text-white font-bold text-center">FG</th>
+          <th class="text-white font-bold text-center">FGA</th>
+          <th class="text-white font-bold text-center">FG%</th>
+          <th class="text-white font-bold text-center">3P</th>
+          <th class="text-white font-bold text-center">3PA</th>
+          <th class="text-white font-bold text-center">3P%</th>
+          <th class="text-white font-bold text-center">TGP</th>
+          <th class="text-white font-bold text-center">Actions</th>
+        </tr>
+        </thead>
+        
+        <tbody id="stats-body">
+        </tbody>
+      </table>
+
+      </div>
+    </div>
+
+    <div class="max-w-6xl mx-auto mt-10 flex gap-4 flex-row">
+      <div class="flex-1">
+        <div class="flex w-full justigy-between items-center  mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">Match History</h2>
+          <p>Filter by match type</p>
+        </div>
+        <button>Tambah Pertandingan</button>
+      </div>
+      <div class="grid grid-cols-4 gap-4">
+          <button class="bg-blue-500 text-white p-2 rounded">Semua (12)</button>
+          <button class="bg-gray-200 text-gray-700 p-2 rounded">Competitive (6)</button>
+          <button class="bg-gray-200 text-gray-700 p-2 rounded">Tournament (3)</button>
+          <button class="bg-gray-200 text-gray-700 p-2 rounded">Friendly (3)</button>
+        </div>
+      </div>
+
+      <div class="flex-1">
+        <div class="flex w-full justigy-between items-center  mb-4">
+        <div>
+          <h2 class="text-2xl font-bold">Match Statistic</h2>
+          <p>Individual performance</p>
+        </div>
+        <button>Tambah Pertandingan</button>
+      </div>
+    </div>
+
+    <header class="bg-blue-600 w-full text-white p-4 bottom-0 z-50">
+      <div class="max-w-6xl mx-auto">
+        <div class="w-full">
+          <h1 class="text-2xl font-bold">Team Basket</h1>
+          <p>Basketball Statistics</p>
+        </div>
+      </div>
+    </header>
+
+    <script type="module" src="./main.js"></script>
+    <script src="./data.js"></script>
   </body>
 </html>
