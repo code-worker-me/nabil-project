@@ -546,10 +546,18 @@ function addPlayerToRoster(player, saveToStorage = false) {
         </p>
       </div>
       
-      <button
-      data-id="${player.id}" class="delete-btn w-full text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors border-2 border-red-200 hover:border-red-400">
-        <i class="fa-solid fa-trash mr-2"></i>Hapus
-      </button>
+      <div class="flex gap-2 w-full">
+        <a
+          href="./edit.html"
+          class="edit-btn flex-1 text-blue-600 hover:bg-blue-50 py-2 rounded-lg font-semibold transition-colors border-2 border-blue-200 hover:border-blue-400">
+          <i class="fa-solid fa-pen-to-square mr-2"></i>Edit
+        </a>
+        <button
+          data-id="${player.id}" 
+          class="delete-btn flex-1 text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors border-2 border-red-200 hover:border-red-400">
+          <i class="fa-solid fa-trash mr-2"></i>Hapus
+        </button>
+      </div>
     </div>
   `;
 
