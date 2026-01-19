@@ -546,7 +546,8 @@ function addPlayerToRoster(player, saveToStorage = false) {
         </p>
       </div>
       
-      <button onclick="deletePlayer(${player.id})" class="w-full text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors border-2 border-red-200 hover:border-red-400">
+      <button
+      data-id="${player.id}" class="delete-btn w-full text-red-600 hover:bg-red-50 py-2 rounded-lg font-semibold transition-colors border-2 border-red-200 hover:border-red-400">
         <i class="fa-solid fa-trash mr-2"></i>Hapus
       </button>
     </div>
@@ -557,14 +558,25 @@ function addPlayerToRoster(player, saveToStorage = false) {
 
 // Function to delete player
 function deletePlayer(id) {
-  if (confirm('Apakah Anda yakin ingin menghapus pemain ini?')) {
-    let players = loadPlayers();
-    players = players.filter(player => player.id !== id);
-    savePlayers(players);
-    loadPlayersToRoster();
-    alert('Pemain berhasil dihapus!');
-  }
+  if (!confirm("Apakah Anda yakin ingin menghapus pemain ini?")) return;
+
+  let players = loadPlayers();
+  players = players.filter(player => player.id !== id);
+
+  savePlayers(players);
+  loadPlayersToRoster();
+
+  alert("Pemain berhasil dihapus!");
 }
+
+document.addEventListener("click", (e) => {
+  const btn = e.target.closest(".delete-btn");
+  if (!btn) return;
+
+  const id = Number(btn.dataset.id);
+  deletePlayer(id);
+});
+
 
 // Make functions global
 window.downloadPlayersJSON = downloadPlayersJSON;
